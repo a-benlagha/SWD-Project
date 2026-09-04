@@ -19,6 +19,8 @@
 
 package org.apache.commons.csv;
 
+import static org.apache.commons.csv.Token.Type.TOKEN;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -47,7 +49,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static org.apache.commons.csv.Token.Type.TOKEN;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.build.AbstractStreamBuilder;
