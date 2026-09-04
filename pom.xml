@@ -269,6 +269,22 @@
         <artifactId>apache-rat-plugin</artifactId>
       </plugin>
 
+      <!-- OpenJML: Formal Specification Verification -->
+      <!-- Validates JML (Java Modeling Language) contracts -->
+      <plugin>
+        <groupId>org.jmlspecs.openjml</groupId>
+        <artifactId>openjml-maven-plugin</artifactId>
+        <version>0.14.0</version>
+        <configuration>
+          <excludes>
+            <exclude>**/*Test.java</exclude>
+          </excludes>
+          <jmlLevel>
+            <level>2</level>
+          </jmlLevel>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 

@@ -39,8 +39,24 @@ import java.util.stream.Stream;
  * following deserialization. There will be a loss of any functionally linked to the header
  * mapping when transferring serialized forms pre-1.8 to 1.8 and vice versa.
  * </p>
+ *
+ * <h2>Formal Specification</h2>
+ * <p>
+ * This class maintains formal JML (Java Modeling Language) contracts:
+ * </p>
+ * <ul>
+ *     <li>The record number is always non-negative</li>
+ *     <li>The values array is never null</li>
+ *     <li>Character position is always non-negative</li>
+ *     <li>Byte position is always non-negative</li>
+ * </ul>
  */
 public final class CSVRecord implements Serializable, Iterable<String> {
+    /*@ public invariant recordNumber >= 0;
+      @ public invariant values != null;
+      @ public invariant characterPosition >= 0;
+      @ public invariant bytePosition >= 0;
+      @*/
 
     private static final long serialVersionUID = 1L;
 

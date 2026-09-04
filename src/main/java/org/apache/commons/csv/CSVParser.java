@@ -19,8 +19,6 @@
 
 package org.apache.commons.csv;
 
-import static org.apache.commons.csv.Token.Type.TOKEN;
-
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -49,6 +47,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import static org.apache.commons.csv.Token.Type.TOKEN;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.build.AbstractStreamBuilder;
@@ -145,8 +144,22 @@ import org.apache.commons.io.function.Uncheck;
  * </p>
  *
  * @see <a href="package-summary.html">package documentation for more details</a>
+ *
+ * <h2>Formal Specification</h2>
+ * <p>
+ * This class maintains formal JML (Java Modeling Language) contracts:
+ * </p>
+ * <ul>
+ *     <li>The record number is always non-negative</li>
+ *     <li>The format specification is never null</li>
+ *     <li>The underlying reader is never null</li>
+ * </ul>
  */
 public final class CSVParser implements Iterable<CSVRecord>, Closeable {
+    /*@ public invariant recordNumber >= 0;
+      @ public invariant format != null;
+      @ public invariant reader != null;
+      @*/
 
     /**
      * Builds a new {@link CSVParser}.
