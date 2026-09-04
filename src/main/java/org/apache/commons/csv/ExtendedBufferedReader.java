@@ -19,6 +19,11 @@
 
 package org.apache.commons.csv;
 
+import static org.apache.commons.csv.Constants.CR;
+import static org.apache.commons.csv.Constants.LF;
+import static org.apache.commons.csv.Constants.UNDEFINED;
+import static org.apache.commons.io.IOUtils.EOF;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.CharBuffer;
@@ -26,11 +31,7 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 
-import static org.apache.commons.csv.Constants.CR;
-import static org.apache.commons.csv.Constants.LF;
-import static org.apache.commons.csv.Constants.UNDEFINED;
 import org.apache.commons.io.IOUtils;
-import static org.apache.commons.io.IOUtils.EOF;
 import org.apache.commons.io.input.UnsynchronizedBufferedReader;
 
 /**
