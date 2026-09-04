@@ -108,10 +108,10 @@ Source Code (with JML annotations)
 ### Run Verification Manually:
 
 ```bash
-# Check all JML contracts
+# Intended command after OpenJML is installed and resolvable
 mvn openjml:check
 
-# Output shows:
+# A successful run should report output similar to:
 # [INFO] OpenJML checking: CSVParser.java
 # [INFO] OpenJML checking: CSVRecord.java
 # [INFO] No specification violations found
@@ -120,11 +120,14 @@ mvn openjml:check
 
 ### Integrated into CI/CD:
 
-The Maven build automatically verifies JML contracts as part of `mvn verify`:
+The OpenJML configuration is recorded in `pom.xml`, but it is not currently
+verified automatically in CI because `org.jmlspecs.openjml:openjml-maven-plugin:0.14.0`
+could not be resolved from Maven Central. The normal Maven build still runs the
+Java compiler, tests, and the existing quality checks:
 
 ```bash
 mvn clean verify
-# Runs: compile → test → checkstyle → spotbugs → openjml → jacoco
+# Runs the normal project checks; this does not prove the JML contracts
 ```
 
 ---
@@ -153,17 +156,17 @@ recordNumber = nextNumber;  // nextNumber >= 0, so OK
 
 ## 5. Contract Assertions in Tests
 
-When running tests, JML contracts are also checked:
+The normal test suite does not execute OpenJML verification. It checks runtime
+behavior only; JML annotations are ignored by the standard Java compiler and
+test runner.
 
 ```bash
-# Run tests with JML verification
-mvn test -DjmlLevel=2
-
-# Each test execution verifies:
-# - Object invariants are maintained
-# - No method violations occur
-# - State consistency is preserved
+# Run the normal tests
+mvn test
 ```
+
+Run the standalone OpenJML command described in Section 3 for formal contract
+verification.
 
 ---
 
@@ -240,8 +243,8 @@ public static String[] parseFields(String input) {
 
 ### Build Phases:
 - `mvn compile` → Compiles Java code
-- `mvn test` → Runs JUnit tests + JML invariant checks
-- `mvn verify` → Runs all quality checks including OpenJML
+- `mvn test` → Runs JUnit tests; it does not prove JML contracts
+- `mvn verify` → Runs the normal project quality checks; OpenJML remains pending
 - `mvn site` → Generates reports
 
 ---
@@ -270,12 +273,15 @@ public final class CSVFormat {
 
 ## 10. Troubleshooting
 
-### Issue: OpenJML Warning - "Specification not found"
+### Issue: OpenJML Maven goal cannot be resolved
 
-**Cause:** OpenJML tools.jar not available  
+**Cause:** `org.jmlspecs.openjml:openjml-maven-plugin:0.14.0` is not available
+from the configured Maven repositories.  
 **Solution:**
 ```bash
-mvn -Dtools.jar=$JAVA_HOME/lib/tools.jar openjml:check
+# Install a compatible standalone OpenJML distribution, then run:
+openjml --esc src/main/java/org/apache/commons/csv/CSVParser.java \
+  src/main/java/org/apache/commons/csv/CSVRecord.java
 ```
 
 ### Issue: Build Fails with "Invariant violation"
@@ -302,9 +308,33 @@ mvn -Dtools.jar=$JAVA_HOME/lib/tools.jar openjml:check
 | Aspect | Status | Details |
 |---|---|---|
 | JML Specification | ✅ Complete | 2 classes, 8 invariants |
-| OpenJML Plugin | ✅ Configured | Version 0.14.0 in pom.xml |
-| CI/CD Integration | ✅ Automatic | Runs in `mvn verify` phase |
-| Code Coverage | ✅ Invariant checked | All 968 tests verify contracts |
+| OpenJML Plugin | ⚠️ Configuration added | Version 0.14.0 is declared in `pom.xml`, but the artifact is not available from Maven Central |
+| Java Build | ✅ Passing | The JML annotations are valid Java comments and do not break compilation or tests |
+| Formal Proof | ⏸ Pending | OpenJML has not run successfully because the Maven plugin cannot be resolved |
 | Documentation | ✅ Complete | This document + inline comments |
 
-**Next Step:** Run `mvn clean verify` to validate all JML specifications!
+### Verification limitation
+
+The JML contracts were added to `CSVParser` and `CSVRecord`, and the normal Maven
+build succeeds. However, normal Java compilation does not verify JML contracts:
+JML annotations are treated as comments by `javac`.
+
+The intended command is:
+
+```bash
+mvn openjml:check
+```
+
+At the time of implementation, this command failed because Maven could not resolve
+`org.jmlspecs.openjml:openjml-maven-plugin:0.14.0` from Maven Central. No standalone
+`openjml` executable was installed on the development machine either. Therefore,
+the project should not claim that OpenJML verification passed. A formal proof can
+be completed later by installing a compatible OpenJML distribution and running:
+
+```bash
+openjml --esc src/main/java/org/apache/commons/csv/CSVParser.java \
+  src/main/java/org/apache/commons/csv/CSVRecord.java
+```
+
+The command is successful when it exits with code `0` and reports no JML errors or
+verification failures.
