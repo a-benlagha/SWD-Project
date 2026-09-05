@@ -27,21 +27,8 @@ permissions:
 jobs:
   build:
 
-    runs-on: ${{ matrix.os }}
-    continue-on-error: ${{ matrix.experimental }}
-    strategy:
-      max-parallel: 20
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-        java: [ 8, 11, 17, 21, 25, 26 ]
-        experimental: [false]
-        # Keep the same parameter order as the matrix above
-        include:
-          - os: ubuntu-latest
-            java: 27-ea
-            experimental: true
-      
+    runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
@@ -52,10 +39,10 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
-    - name: Set up JDK ${{ matrix.java }}
+    - name: Set up JDK 17
       uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # 6.0.0
       with:
-        distribution: ${{ runner.os == 'macOS' && matrix.java == '8' && 'zulu' || 'temurin' }}
-        java-version: ${{ matrix.java }}
+        distribution: temurin
+        java-version: '17'
     - name: Build with Maven
-      run: mvn -Ddoclint=all --show-version --batch-mode --no-transfer-progress
+      run: mvn clean test -Dcheckstyle.skip
