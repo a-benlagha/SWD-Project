@@ -129,6 +129,14 @@
     <commons.jacoco.branchRatio>0.97</commons.jacoco.branchRatio>
     <commons.jacoco.lineRatio>0.99</commons.jacoco.lineRatio>
     <commons.jacoco.complexityRatio>0.97</commons.jacoco.complexityRatio>
+
+    <!-- SonarCloud & JaCoCo Coverage Integration -->
+    <sonar.organization>a-benlagha</sonar.organization>
+    <sonar.projectKey>a-benlagha_SWD-Project</sonar.projectKey>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+    <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+
     <!-- Checkstyle -->
     <checkstyle.header.file>${basedir}/src/conf/checkstyle/checkstyle-header.txt</checkstyle.header.file>
     <checkstyle.config.file>${basedir}/src/conf/checkstyle/checkstyle.xml</checkstyle.config.file>
