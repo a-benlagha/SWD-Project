@@ -20,6 +20,6 @@ COPY pom.xml .
 COPY src ./src
 RUN --mount=type=cache,target=/root/.m2 mvn -B clean package -Dopenjml.skip=true -Dcheckstyle.skip=true
 
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:26.0.1_8-jre
 WORKDIR /app
 COPY --from=build /workspace/target/*.jar ./
